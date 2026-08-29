@@ -1,9 +1,9 @@
 manifest:
   remotes:
     - name: zmkfirmware
-      url: https://github.com
+      url: https://github.com/zmkfirmware
     - name: halfdane
-      url: https://github.com/halfdane
+      url: https://github.com
   projects:
     - name: zmk
       remote: zmkfirmware
