@@ -29,8 +29,8 @@
         compatible = "cirque,pinnacle";
         reg = <0x2a>;                           // Native Cirque I2C ID
         
-        /* Map the interrupt line using native Zephyr specifications */
-        interrupts-extended = <&gpio0 27 1>;     // Raw bitmask (1 = Active High Edge Trigger)
+        /* FIX: Map the interrupt using the proper nRF52 GPIOTE controller node */
+        interrupts-extended = <&gpiote 27 1>;   // Route Pin 27 (XIAO D3) via GPIOTE block
         
         sensitivity = "2x";                     // Speed modifier (1x to 4x)
     };
