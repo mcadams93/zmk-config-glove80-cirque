@@ -1,0 +1,14 @@
+manifest:
+  remotes:
+    - name: zmkfirmware
+      url: https://github.com
+    - name: halfdane
+      url: https://github.com
+  projects:
+    - name: zmk
+      remote: zmkfirmware
+      revision: main
+      import: app/west.yml
+    - name: zmk-input-gestures
+      remote: halfdane
+      revision: main
