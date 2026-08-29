@@ -2,37 +2,43 @@
 #include <dt-bindings/gpio/gpio.h>
 
 &pinctrl {
-    i2c0_default: i2c0_default {
+    spi0_default: spi0_default {
         group1 {
-            psels = <NRF_PSEL(TWIM_SDA, 0, 4)>, // XIAO Pin D4 (SDA)
-                    <NRF_PSEL(TWIM_SCL, 0, 5)>; // XIAO Pin D5 (SCL)
-            bias-pull-up;
+            psels = <NRF_PSEL(SPIM_SCK, 0, 5)>,  // SCK -> XIAO Pin D5
+                    <NRF_PSEL(SPIM_MOSI, 0, 10)>, // MOSI -> XIAO Pin D10
+                    <NRF_PSEL(SPIM_MISO, 0, 9)>;  // MISO -> XIAO Pin D9
         };
     };
 
-    i2c0_sleep: i2c0_sleep {
+    spi0_sleep: spi0_sleep {
         group1 {
-            psels = <NRF_PSEL(TWIM_SDA, 0, 4)>,
-                    <NRF_PSEL(TWIM_SCL, 0, 5)>;
+            psels = <NRF_PSEL(SPIM_SCK, 0, 5)>,
+                    <NRF_PSEL(SPIM_MOSI, 0, 10)>,
+                    <NRF_PSEL(TWIM_MISO, 0, 9)>;
             low-power-enable;
         };
     };
 };
 
-&i2c0 {
+&spi0 {
     status = "okay";
-    pinctrl-0 = <&i2c0_default>;
-    pinctrl-1 = <&i2c0_sleep>;
+    pinctrl-0 = <&spi0_default>;
+    pinctrl-1 = <&spi0_sleep>;
     pinctrl-names = "default", "sleep";
+    
+    /* SPI Chip Select Line */
+    cs-gpios = <&gpio0 4 GPIO_ACTIVE_LOW>; // CS -> XIAO Pin D2
 
-    trackpad: pinnacle@2a {
+    trackpad: pinnacle@0 {
         compatible = "cirque,pinnacle";
-        reg = <0x2a>;                                      // Native Cirque I2C ID
+        reg = <0>;
+        spi-max-frequency = <1000000>;
+        status = "okay";
         
-        /* THE FIXED PARSING DEFINITION: Uses explicit Zephyr syntax matching the input engine specs */
-        dr-gpios = <&gpio0 27 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>; // XIAO Pin D3 Line
+        /* Official ZMK Driver property name for SPI Data Ready Interrupt line */
+        dr-gpios = <&gpio0 27 GPIO_ACTIVE_HIGH>; // DR -> XIAO Pin D3
         
-        sensitivity = "2x";                                // Speed modifier (1x to 4x)
+        sensitivity = "2x";                     // Speed modifier (1x to 4x)
     };
 };
 
