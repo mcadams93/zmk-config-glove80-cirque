@@ -1,15 +1,35 @@
 #include <dt-bindings/zmk/input_transform.h>
 #include <dt-bindings/gpio/gpio.h>
 
+&pinctrl {
+    /* Define explicit, custom pin mappings for the SPI bus */
+    my_spi0_default: my_spi0_default {
+        group1 {
+            psels = <NRF_PSEL(SPIM_SCK, 0, 5)>,   // SCK Line -> Seeed Studio Pin D5
+                    <NRF_PSEL(SPIM_MOSI, 0, 10)>, // MOSI Line -> Seeed Studio Pin D10
+                    <NRF_PSEL(SPIM_MISO, 0, 9)>;  // MISO Line -> Seeed Studio Pin D9
+        };
+    };
+
+    my_spi0_sleep: my_spi0_sleep {
+        group1 {
+            psels = <NRF_PSEL(SPIM_SCK, 0, 5)>,
+                    <NRF_PSEL(SPIM_MOSI, 0, 10)>,
+                    <NRF_PSEL(SPIM_MISO, 0, 9)>;
+            low-power-enable;
+        };
+    };
+};
+
 &spi0 {
     status = "okay";
     
-    /* FIX: Supply the mandatory pin-control maps pre-defined by the Seeed board profile */
-    pinctrl-0 = <&spi0_default>;
-    pinctrl-1 = <&spi0_sleep>;
+    /* Assign our explicitly declared pin configurations */
+    pinctrl-0 = <&my_spi0_default>;
+    pinctrl-1 = <&my_spi0_sleep>;
     pinctrl-names = "default", "sleep";
     
-    /* Assign native hardware Chip Select directly to the SPI interface mapping */
+    /* SPI Chip Select Hardware Target Mapping */
     cs-gpios = <&gpio0 4 GPIO_ACTIVE_LOW>; // CS line linked to Seeed Studio D2
 
     trackpad: pinnacle@0 {
@@ -18,7 +38,7 @@
         spi-max-frequency = <1000000>;
         status = "okay";
         
-        /* Zephyr 4.1 Upstream Property format requirements */
+        /* Zephyr 4.1 Core Upstream Property format requirements */
         data-ready-gpios = <&gpio0 27 GPIO_ACTIVE_HIGH>; // DR line linked to Seeed Studio D3
         sensitivity = "2x";
         sleep-mode-enable;
