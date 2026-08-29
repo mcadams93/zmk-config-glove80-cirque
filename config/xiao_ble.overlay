@@ -44,7 +44,7 @@
         sleep-mode-enable;
         
         /* Instructs the driver to pass raw coordinates to the input-gestures listener */
-        absolute-mode;
+        data-mode = "absolute";
     };
 };
 
