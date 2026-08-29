@@ -28,14 +28,14 @@
         compatible = "cirque,pinnacle";
         reg = <0x2a>;                           // Native Cirque I2C ID
         
-        /* FIX: Use the standard Zephyr I2C interrupt definition */
-        gpios = <&gpio0 27 GPIO_ACTIVE_HIGH>;   // XIAO Pin D3 Interrupt
+        /* RESTORED: Standard driver expected key name for the interrupt line */
+        dr-gpios = <&gpio0 27 GPIO_ACTIVE_HIGH>; // XIAO Pin D3 Interrupt
         
         sensitivity = "2x";                     // Speed modifier (1x to 4x)
         sleep;
         
-        /* REQUIRED: Forces Absolute Coordinates to evaluate gesture shapes */
-        status-absolute; 
+        /* CORRECTED: Official parameter required to stream data to input-gestures */
+        absolute-mode;
     };
 };
 
