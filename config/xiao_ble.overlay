@@ -26,16 +26,21 @@
 
     trackpad: pinnacle@2a {
         compatible = "cirque,pinnacle";
-        reg = <0x2a>;                           
-        dr-gpios = <&gpio0 27 GPIO_ACTIVE_HIGH>; // XIAO Pin D3 Interupt
+        reg = <0x2a>;                           // Native Cirque I2C ID
         
-        sensitivity = "2x";                     
+        /* FIX: Use the standard Zephyr I2C interrupt definition */
+        gpios = <&gpio0 27 GPIO_ACTIVE_HIGH>;   // XIAO Pin D3 Interrupt
+        
+        sensitivity = "2x";                     // Speed modifier (1x to 4x)
         sleep;
+        
+        /* REQUIRED: Forces Absolute Coordinates to evaluate gesture shapes */
         status-absolute; 
     };
 };
 
 / {
+    /* Define gesture zones, taps, and circular thresholds */
     trackpad_gestures: trackpad_gestures {
         compatible = "halfdane,zmk-input-gestures";
         device = <&trackpad>;
@@ -56,6 +61,7 @@
         circular-scroll-height = <1024>;
     };
 
+    /* Pipe processed gestures into standard mouse events */
     trackpad_listener {
         compatible = "zmk,input-listener";
         device = <&trackpad_gestures>;
