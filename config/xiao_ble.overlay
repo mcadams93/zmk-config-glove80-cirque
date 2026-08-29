@@ -3,8 +3,8 @@
 &pinctrl {
     i2c0_default: i2c0_default {
         group1 {
-            psels = <NRF_PSEL(TWIM_SDA, 0, 4)>, // XIAO Pin D4
-                    <NRF_PSEL(TWIM_SCL, 0, 5)>; // XIAO Pin D5
+            psels = <NRF_PSEL(TWIM_SDA, 0, 4)>, // XIAO Pin D4 (SDA)
+                    <NRF_PSEL(TWIM_SCL, 0, 5)>; // XIAO Pin D5 (SCL)
             bias-pull-up;
         };
     };
@@ -28,14 +28,11 @@
         compatible = "cirque,pinnacle";
         reg = <0x2a>;                           // Native Cirque I2C ID
         
-        /* RESTORED: Standard driver expected key name for the interrupt line */
-        dr-gpios = <&gpio0 27 GPIO_ACTIVE_HIGH>; // XIAO Pin D3 Interrupt
+        /* REQUIRED FOR I2C: The standard binding property name for the interrupt line */
+        gpios = <&gpio0 27 GPIO_ACTIVE_HIGH>;   // XIAO Pin D3 Interrupt
         
         sensitivity = "2x";                     // Speed modifier (1x to 4x)
-        sleep;
-        
-        /* CORRECTED: Official parameter required to stream data to input-gestures */
-        absolute-mode;
+        sleep;                                  // Enable low-power idling
     };
 };
 
