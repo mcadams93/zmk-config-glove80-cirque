@@ -4,7 +4,12 @@
 &spi0 {
     status = "okay";
     
-    /* Native hardware Chip Select mapped cleanly onto the XIAO pin layout */
+    /* FIX: Supply the mandatory pin-control maps pre-defined by the Seeed board profile */
+    pinctrl-0 = <&spi0_default>;
+    pinctrl-1 = <&spi0_sleep>;
+    pinctrl-names = "default", "sleep";
+    
+    /* Assign native hardware Chip Select directly to the SPI interface mapping */
     cs-gpios = <&gpio0 4 GPIO_ACTIVE_LOW>; // CS line linked to Seeed Studio D2
 
     trackpad: pinnacle@0 {
@@ -13,39 +18,39 @@
         spi-max-frequency = <1000000>;
         status = "okay";
         
-        /* Zephyr 4.1 Official Core Upstream Parameters */
+        /* Zephyr 4.1 Upstream Property format requirements */
         data-ready-gpios = <&gpio0 27 GPIO_ACTIVE_HIGH>; // DR line linked to Seeed Studio D3
         sensitivity = "2x";
         sleep-mode-enable;
         
-        /* Flags the hardware controller to forward raw coordinate maps */
+        /* Instructs the driver to pass raw coordinates to the input-gestures listener */
         absolute-mode;
     };
 };
 
 / {
-    /* Step 1: Forward absolute touch variables to halfdane gesture calculations */
+    /* Step 1: Pass raw coordinates into the halfdane gesture processing matrix */
     trackpad_gestures: trackpad_gestures {
         compatible = "halfdane,zmk-input-gestures";
         device = <&trackpad>;
 
-        /* Surface Click Mapping */
+        /* Tap Actions */
         tap-to-click;
         double-tap-to-click;
         
-        /* Corner Right-Click Quadrant Definition */
+        /* Bottom-Right Corner Right Click Quadrant */
         right-click-zone;
         right-click-zone-min-x = <70>;  
         right-click-zone-max-y = <30>;  
 
-        /* Circular Perimeter Rim Scrolling Map */
+        /* Circular Perimeter Rim Scrolling Parameters */
         circular-scroll;
         circular-scroll-rim-percent = <12>; 
         circular-scroll-width = <1024>;    
         circular-scroll-height = <1024>;
     };
 
-    /* Step 2: Stream completed actions straight back to ZMK mouse engine nodes */
+    /* Step 2: Feed the completed clicks and scrolls straight back into ZMK mouse registers */
     trackpad_listener {
         compatible = "zmk,input-listener";
         device = <&trackpad_gestures>;
