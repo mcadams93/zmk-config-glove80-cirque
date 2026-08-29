@@ -4,7 +4,7 @@
 &pinctrl {
     spi0_default: spi0_default {
         group1 {
-            psels = <NRF_PSEL(SPIM_SCK, 0, 5)>,  // SCK -> XIAO Pin D5
+            psels = <NRF_PSEL(SPIM_SCK, 0, 5)>,   // SCK -> XIAO Pin D5
                     <NRF_PSEL(SPIM_MOSI, 0, 10)>, // MOSI -> XIAO Pin D10
                     <NRF_PSEL(SPIM_MISO, 0, 9)>;  // MISO -> XIAO Pin D9
         };
@@ -14,7 +14,8 @@
         group1 {
             psels = <NRF_PSEL(SPIM_SCK, 0, 5)>,
                     <NRF_PSEL(SPIM_MOSI, 0, 10)>,
-                    <NRF_PSEL(TWIM_MISO, 0, 9)>;
+                    /* FIXED: Changed TWIM_MISO to SPIM_MISO */
+                    <NRF_PSEL(SPIM_MISO, 0, 9)>;  
             low-power-enable;
         };
     };
