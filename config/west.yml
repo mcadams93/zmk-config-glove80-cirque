@@ -3,7 +3,7 @@ manifest:
     - name: zmkfirmware
       url: https://github.com
     - name: halfdane
-      url: https://github.com
+      url: https://github.com/halfdane
   projects:
     - name: zmk
       remote: zmkfirmware
@@ -12,3 +12,6 @@ manifest:
     - name: zmk-input-gestures
       remote: halfdane
       revision: main
+      path: modules/zmk-input-gestures
+  self:
+    path: config
