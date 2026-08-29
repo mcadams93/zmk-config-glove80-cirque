@@ -1,0 +1,63 @@
+#include <dt-bindings/zmk/input_transform.h>
+
+&pinctrl {
+    i2c0_default: i2c0_default {
+        group1 {
+            psels = <NRF_PSEL(TWIM_SDA, 0, 4)>, // XIAO Pin D4
+                    <NRF_PSEL(TWIM_SCL, 0, 5)>; // XIAO Pin D5
+            bias-pull-up;
+        };
+    };
+
+    i2c0_sleep: i2c0_sleep {
+        group1 {
+            psels = <NRF_PSEL(TWIM_SDA, 0, 4)>,
+                    <NRF_PSEL(TWIM_SCL, 0, 5)>;
+            low-power-enable;
+        };
+    };
+};
+
+&i2c0 {
+    status = "okay";
+    pinctrl-0 = <&i2c0_default>;
+    pinctrl-1 = <&i2c0_sleep>;
+    pinctrl-names = "default", "sleep";
+
+    trackpad: pinnacle@2a {
+        compatible = "cirque,pinnacle";
+        reg = <0x2a>;                           
+        dr-gpios = <&gpio0 27 GPIO_ACTIVE_HIGH>; // XIAO Pin D3 Interupt
+        
+        sensitivity = "2x";                     
+        sleep;
+        status-absolute; 
+    };
+};
+
+/ {
+    trackpad_gestures: trackpad_gestures {
+        compatible = "halfdane,zmk-input-gestures";
+        device = <&trackpad>;
+
+        /* Tap Actions */
+        tap-to-click;
+        double-tap-to-click;
+        
+        /* Bottom-Right Right Click Quadrant */
+        right-click-zone;
+        right-click-zone-min-x = <70>;  
+        right-click-zone-max-y = <30>;  
+
+        /* Circular Rim Scrolling */
+        circular-scroll;
+        circular-scroll-rim-percent = <12>; 
+        circular-scroll-width = <1024>;    
+        circular-scroll-height = <1024>;
+    };
+
+    trackpad_listener {
+        compatible = "zmk,input-listener";
+        device = <&trackpad_gestures>;
+    };
+};
