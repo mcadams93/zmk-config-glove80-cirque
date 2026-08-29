@@ -1,4 +1,5 @@
 #include <dt-bindings/zmk/input_transform.h>
+#include <dt-bindings/gpio/gpio.h>
 
 &pinctrl {
     i2c0_default: i2c0_default {
@@ -28,8 +29,8 @@
         compatible = "cirque,pinnacle";
         reg = <0x2a>;                           // Native Cirque I2C ID
         
-        /* FIX: Map the interrupt line using native Zephyr specifications */
-        interrupts-extended = <&gpio0 27 IRQ_TYPE_EDGE_RISING>; // XIAO Pin D3 IRQ Line
+        /* FIXED: Uses universally available numerical values for Pin D3 interrupt routing */
+        interrupts-extended = <&gpio0 27 1>;     // Raw bitmask (1 = Active High Edge Trigger)
         
         sensitivity = "2x";                     // Speed modifier (1x to 4x)
         sleep;                                  // Enable low-power idling
