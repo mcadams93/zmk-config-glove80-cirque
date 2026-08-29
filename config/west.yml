@@ -12,5 +12,6 @@ manifest:
     - name: zmk-input-gestures
       remote: halfdane
       revision: main
+      path: modules/zmk-input-gestures
   self:
     path: config
