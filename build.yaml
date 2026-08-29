@@ -1,0 +1,2 @@
+include:
+  - board: xiao_ble//zmk
