@@ -35,11 +35,11 @@
         reg = <0>;
         spi-max-frequency = <1000000>;
         status = "okay";
-        data-ready-gpios = <&gpio0 27 GPIO_ACTIVE_HIGH>; // DR line linked to Seeed Studio D3
+        drg-gpios = <&gpio0 27 GPIO_ACTIVE_HIGH>; // DR line linked to Seeed Studio D3
         sensitivity = "2x";
         sleep-mode-enable;
         
-        /* Absolute mode required by zmk-input-gestures for circular scroll */
+        /* Absolute mode required for circular scroll gesture */
         absolute-mode;
     };
 };
