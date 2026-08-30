@@ -1,8 +1,11 @@
 #include <dt-bindings/zmk/input_transform.h>
 #include <dt-bindings/gpio/gpio.h>
 
+/* Import gesture and coordinate translation input processors */
+#include <behaviors/input_processor_gestures.dtsi>
+#include <behaviors/input_processor_absolute_to_relative.dtsi>
+
 &pinctrl {
-    /* Define explicit, custom pin mappings for the SPI bus */
     my_spi0_default: my_spi0_default {
         group1 {
             psels = <NRF_PSEL(SPIM_SCK, 0, 5)>,   // SCK Line -> Seeed Studio Pin D5
@@ -23,13 +26,9 @@
 
 &spi0 {
     status = "okay";
-    
-    /* Assign our explicitly declared pin configurations */
     pinctrl-0 = <&my_spi0_default>;
     pinctrl-1 = <&my_spi0_sleep>;
     pinctrl-names = "default", "sleep";
-    
-    /* SPI Chip Select Hardware Target Mapping */
     cs-gpios = <&gpio0 4 GPIO_ACTIVE_LOW>; // CS line linked to Seeed Studio D2
 
     trackpad: pinnacle@0 {
@@ -37,44 +36,29 @@
         reg = <0>;
         spi-max-frequency = <1000000>;
         status = "okay";
-        
-        /* Zephyr 4.1 Core Upstream Property format requirements */
         data-ready-gpios = <&gpio0 27 GPIO_ACTIVE_HIGH>; // DR line linked to Seeed Studio D3
         sensitivity = "2x";
         sleep-mode-enable;
         
-        /* Instructs the driver to pass raw coordinates to the input-gestures listener */
-        data-mode = "absolute";
+        /* Activate absolute mode for halfdane gestures */
+        absolute-mode;
     };
 };
 
+/* Configure active gesture behavior settings */
+&zip_gestures {
+    tap-detection;
+    circular-scroll;
+};
+
 / {
-    /* Step 1: Pass raw coordinates into the halfdane gesture processing matrix */
-    trackpad_gestures: trackpad_gestures {
-        compatible = "halfdane,zmk-input-gestures";
-        status = "okay";
-        device = <&trackpad>;
-
-        /* Tap Actions */
-        tap-to-click;
-        double-tap-to-click;
-        
-        /* Bottom-Right Corner Right Click Quadrant */
-        right-click-zone;
-        right-click-zone-min-x = <70>;  
-        right-click-zone-max-y = <30>;  
-
-        /* Circular Perimeter Rim Scrolling Parameters */
-        circular-scroll;
-        circular-scroll-rim-percent = <12>; 
-        circular-scroll-width = <1024>;    
-        circular-scroll-height = <1024>;
-    };
-
-    /* Step 2: Feed the completed clicks and scrolls straight back into ZMK mouse registers */
+    /* Route hardware trackpad input through the gesture pipeline */
     trackpad_listener {
         compatible = "zmk,input-listener";
-        status = "okay";
-        device = <&trackpad_gestures>;
+        device = <&trackpad>;
+        input-processors = <
+            &zip_gestures
+            &zip_absolute_to_relative
+        >;
     };
 };
