@@ -52,6 +52,7 @@
     /* Step 1: Pass raw coordinates into the halfdane gesture processing matrix */
     trackpad_gestures: trackpad_gestures {
         compatible = "halfdane,zmk-input-gestures";
+        status = "okay";
         device = <&trackpad>;
 
         /* Tap Actions */
@@ -73,6 +74,7 @@
     /* Step 2: Feed the completed clicks and scrolls straight back into ZMK mouse registers */
     trackpad_listener {
         compatible = "zmk,input-listener";
+        status = "okay";
         device = <&trackpad_gestures>;
     };
 };
