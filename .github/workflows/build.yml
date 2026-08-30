@@ -37,8 +37,8 @@ jobs:
           west update
           west zephyr-export
 
-      - name: Remove conflicting Zephyr native Pinnacle binding
-        run: rm -f zephyr/dts/bindings/input/cirque,pinnacle-spi.yaml
+      - name: Remove conflicting Zephyr native Pinnacle bindings
+        run: rm -f zephyr/dts/bindings/input/cirque,pinnacle*
 
       - name: Build Firmware
         run: |
