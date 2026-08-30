@@ -1,7 +1,6 @@
 #include <dt-bindings/zmk/input_transform.h>
 #include <dt-bindings/gpio/gpio.h>
 
-/* Import gesture and coordinate translation processors */
 #include <behaviors/input_processor_gestures.dtsi>
 #include <behaviors/input_processor_absolute_to_relative.dtsi>
 
@@ -39,10 +38,13 @@
         data-ready-gpios = <&gpio0 27 GPIO_ACTIVE_HIGH>; // DR line linked to Seeed Studio D3
         sensitivity = "2x";
         sleep-mode-enable;
+        
+        /* Absolute mode required by zmk-input-gestures for circular scroll */
+        absolute-mode;
     };
 };
 
-/* Enable circular scrolling and tap detection */
+/* Enable gestures */
 &zip_gestures {
     tap-detection;
     circular-scroll;
