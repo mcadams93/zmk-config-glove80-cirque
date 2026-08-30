@@ -11,7 +11,7 @@
         compatible = "zmk,matrix-transform";
         columns = <1>;
         rows = <1>;
-        map = <RC(0,0)>;
+        map = <0>;
     };
 
     /* Define a baseline 1x1 empty structural scan */
