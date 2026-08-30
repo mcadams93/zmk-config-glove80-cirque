@@ -35,7 +35,7 @@
         reg = <0>;
         spi-max-frequency = <1000000>;
         status = "okay";
-        drg-gpios = <&gpio0 27 GPIO_ACTIVE_HIGH>; // DR line linked to Seeed Studio D3
+        dr-gpios = <&gpio0 27 GPIO_ACTIVE_HIGH>; // DR line linked to Seeed Studio D3
         sensitivity = "2x";
         sleep-mode-enable;
         
